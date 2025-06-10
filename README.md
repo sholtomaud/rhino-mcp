@@ -177,6 +177,43 @@ Here are some examples of what you can ask Claude to do:
 - "Link a Grasshopper component to an external Python file"
 - "Get the current state of selected Grasshopper components"
 
+## Programmatic Usage (for CAD Automation Workflows)
+
+Beyond LLM-driven interaction, RhinoMCP can be used programmatically as part of automated CAD workflows, such as multi-objective genetic algorithms, parametric studies, or custom design automation scripts. This allows your Python scripts to directly control and query Rhino and Grasshopper.
+
+The primary interface for this is the `MCPClient` class located in `rhino_mcp.programmatic_client`.
+
+### How it Works
+
+The `MCPClient` starts the core MCP server (`rhino_mcp/rhino_mcp/server.py`) as a subprocess and communicates with it over stdio using a JSON-RPC-like protocol. The client then provides Python methods that wrap the underlying MCP tools, allowing you to:
+
+- Execute arbitrary Python (IronPython 2.7) code in Rhino.
+- Execute arbitrary Python (IronPython 2.7) code in Grasshopper.
+- Query detailed information about Rhino scenes and objects (including metadata).
+- Query detailed information about Grasshopper definitions, components, and parameters.
+- Update Grasshopper script components, including their code, parameters, and code references.
+- Capture Rhino viewports as images.
+- Manage layers in Rhino.
+
+### Prerequisites
+
+1.  **Rhino-MCP Package Installation**: The `rhino-mcp` Python package must be installed in the Python environment from which you run your programmatic client script. Follow the "Setting up the Python Environment" section, especially the `uv pip install -e .` step from within the main `rhino_mcp` directory (the one containing `pyproject.toml`).
+2.  **Rhino Environment**: Rhino must be running, and the `rhino_mcp_client.py` script must be executed within Rhino's Python environment to start its socket server. (See "Installing the Rhino-side Script").
+3.  **Grasshopper Environment**: For Grasshopper interactions, the `grasshopper_mcp_client.gh` definition must be open in Grasshopper, and its internal HTTP server component must be active and running. (See "Grasshopper Integration").
+
+### Example Usage
+
+An example script, `rhino_mcp/run_client_example.py`, demonstrates how to:
+- Instantiate `MCPClient`.
+- Start and stop the MCP server.
+- Call various Rhino and Grasshopper interaction methods.
+
+Please refer to this example for detailed usage patterns and required setup. You can run it from your project root directory:
+```bash
+python rhino_mcp/run_client_example.py
+```
+Make sure the Python environment used to run this example has the `rhino-mcp` package installed.
+
 ## Troubleshooting
 
 - **Connection issues**: 
